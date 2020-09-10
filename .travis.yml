@@ -1,0 +1,58 @@
+# -*- coding: utf-8 -*-
+#
+# Copyright (C) 2020 UCT Prague.
+#
+# oarepo-validate is free software; you can redistribute it and/or modify it under
+# the terms of the MIT License; see LICENSE file for more details.
+
+notifications:
+  email: false
+
+dist: xenial
+
+sudo: false
+
+language: python
+
+matrix:
+  fast_finish: true
+
+cache:
+  - pip
+
+python:
+- '3.8'
+
+
+before_install:
+  - travis_retry pip install --upgrade pip setuptools
+  - "travis_retry pip install twine wheel coveralls requirements-builder pip-tools"
+  - "requirements-builder --level=pypi setup.py > .travis-release-requirements.in"
+  - "pip-compile -U --verbose -o .travis-release-requirements.txt .travis-release-requirements.in"
+  - cat .travis-release-requirements.txt
+
+install:
+  - travis_retry pip install -r .travis-release-requirements.txt
+
+script:
+  - "./run-tests.sh"
+
+after_success:
+  - coveralls
+
+# check if release tag is the same as version.py tag
+before_deploy:
+- |-
+  SRCTAG=$(cat oarepo_iiif/version.py | grep '__version__' | sed 's/__version__//' | sed 's/=//g' | sed 's/"//g' | sed "s/'//g" | sed 's/[ \t\n]//g')
+  test $SRCTAG == $TRAVIS_TAG
+
+deploy:
+  provider: pypi
+  user: "__token__"
+  password:
+    secure: "OkQgjyGEk/x4rsP+p7GqqEixcRuJ0XrscyJH+SQ7F4p2LbSdJhanIUPdSLttyUs2AOS7ocQUTWbfzOPuRnZseWpwCAnw9BR4fJshRd7EajWLvvAwi1HDh6oNaHDPgEvBRR7liYo7akpQqkbG7YQw1d5kLofbeKGg5U6PS2iNreplv45tdOZFgD/K55Qu3bPX0eY8y4OzI83jx04KGeby47O4hpkoOuGcHbjy70GEwhKExD2aCOw6NuKVdKNe7Awoe9Ombw5XQpFl5kpdN0QbnGWKoB0fqgR2OkLchBGRGlQy4LLaKLfPUABzs7cCf3tuTcHjz06IIvLskOJXA+WDnhJkisyJsQgcMhReKTuR/R6pxYlzW4c+J8KbG9QRCBpalkxwquXfPUrxwFiWsFmtNXefB20rdsROLZd6kkyEN4EweOcJZKOEkSRTTvLbIXi0e/ITsA33P7bpAdejHpitzSkAqiqZtVKVp1bLfyGEGKAfjtZKU3uQbIxsVRdD6gi4vhV+rUKo1kU0+qXfkWrj9O0WvD6GHZ53J9fVgZ6MwpGAV2obqOxPqXC5NXyj50hKokS7zuXrvabmeHt3ujr5jRV7A7kkXLD8x+t4JOYMkhzNwc0NMjcgJPE7bi5HyimqXGHZpe1pQoJukUEtD1NfNBbaN+pXUSM5vmFgPxEyaNI="
+  on:
+    tags: true
+    branch: master
+  distributions: "sdist bdist_wheel"
+  skip_existing: true
