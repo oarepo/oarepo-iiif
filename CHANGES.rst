@@ -1,7 +1,7 @@
 Changes
 =======
 
-[Version 1.1.0]
+[Version 1.0.0]
 ===============
 
-  - Added 'allOf' mapping directive support
+  - Initial version of the library
