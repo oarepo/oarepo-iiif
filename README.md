@@ -21,7 +21,8 @@ This package adds this support.
 
 ## Usage
 
-Create an opener and register it to entry point ``oarepo-iiif.openers`` .
+Create an opener and register it to entry point ``oarepo-iiif.openers`` . The ``uuid``
+contains an identification of the image. It is up to you to parse and interpret it.
 
 ```
 def pdf_opener(uuid, app=None, **kwargs):   # kwargs currently empty but keep them for extensibility
@@ -43,10 +44,13 @@ def pdf_check(uuid, app=None, **kwargs):        # kwargs might contain 'version'
     return True
 ```
 
+See [rest test](tests/test_rest.py) for an example of these functions.
+
+Then power up the server and hit IIIF url:
 
 ```bash
 
-curl https://127.0.0.1:5000/api/iiif/<version>/<uuid>/<region>/<size>/<rotation>/<quality>.<format>
+curl https://127.0.0.1:5000/api/iiif/v2/<uuid>/<region>/<size>/<rotation>/<quality>.<format>
 
 ```
 
