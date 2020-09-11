@@ -25,7 +25,7 @@ class OARepoIIIFExtState:
     @cached_property
     def openers(self):
         openers = []
-        for entry_point in pkg_resources.iter_entry_points('oarepo-iiif.openers'):
+        for entry_point in pkg_resources.iter_entry_points('oarepo_iiif.openers'):
             openers.append(entry_point.load())
         openers.sort(key=lambda opener: -getattr(opener, '_priority', 10))
         return openers
@@ -33,7 +33,7 @@ class OARepoIIIFExtState:
     @cached_property
     def checks(self):
         checks = []
-        for entry_point in pkg_resources.iter_entry_points('oarepo-iiif.checks'):
+        for entry_point in pkg_resources.iter_entry_points('oarepo_iiif.checks'):
             checks.append(entry_point.load())
         checks.sort(key=lambda opener: -getattr(opener, '_priority', 10))
         return checks

@@ -21,7 +21,7 @@ This package adds this support.
 
 ## Usage
 
-Create an opener and register it to entry point ``oarepo-iiif.openers`` . The ``uuid``
+Create an opener and register it to entry point ``oarepo_iiif.openers`` . The ``uuid``
 contains an identification of the image. It is up to you to parse and interpret it.
 
 ```
@@ -31,7 +31,7 @@ def pdf_opener(uuid, app=None, **kwargs):   # kwargs currently empty but keep th
 
 If the opener loads data not from file buckets but from another location,
 you have to register a function that checks access (and raises werkzeug exception
-if the access is denied). The entry point for this function is ``oarepo-iiif.checks``.
+if the access is denied). The entry point for this function is ``oarepo_iiif.checks``.
 
 ```
 def pdf_check(uuid, app=None, **kwargs):        # kwargs might contain 'version', 'region', 'size', 'rotation', 'quality', 'image_format'
