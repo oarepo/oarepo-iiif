@@ -51,6 +51,8 @@ class OARepoIIIFExt:
 def loaded(sender, app=None, **kwargs):
     with app.app_context():
         current_oarepo_iiif = app.extensions['oarepo-iiif']
+        _ = current_oarepo_iiif.openers     # read and discard to detect errors
+        _ = current_oarepo_iiif.checks      # to openers and checks during app loading
 
         iiif_ext = current_app.extensions['invenio-iiif'].iiif_ext
         prev_opener = iiif_ext.uuid_to_image_opener
