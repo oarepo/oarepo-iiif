@@ -21,6 +21,8 @@ This package adds this support.
 
 ## Usage
 
+### Opener functions
+
 Create an opener and register it to entry point ``oarepo_iiif.openers`` . The ``uuid``
 contains an identification of the image. It is up to you to parse and interpret it.
 
@@ -28,6 +30,8 @@ contains an identification of the image. It is up to you to parse and interpret 
 def pdf_opener(uuid, app=None, **kwargs):   # kwargs currently empty but keep them for extensibility
     return binary stream of image data or None if can not handle the uuid  
 ```
+
+### Check functions
 
 If the opener loads data not from file buckets but from another location,
 you have to register a function that checks access (and raises werkzeug exception
@@ -46,6 +50,22 @@ def pdf_check(uuid, app=None, **kwargs):        # kwargs might contain 'version'
 
 See [rest test](tests/test_rest.py) for an example of these functions.
 
+### Indentifier creating functions (optional)
+
+Optionally register an identifier creating function under entrypoint ``oarepo_iiif.identifier_makers``.
+The function gets invenio-record-files' FileObject and Record and should produce identifier
+used in checks & openers.
+
+```
+def pdf_identifier(record: Record, file:FileObject, pid:PersistentIdentifier, app=None, **kwargs):
+    """
+        return crafted PDF identifier
+    """
+    return 'pdf-images:{recid}:{key}'.format(recid=record.id, key=file['key'])
+```
+
+ 
+
 Then power up the server and hit IIIF url:
 
 ```bash
@@ -53,6 +73,16 @@ Then power up the server and hit IIIF url:
 curl https://127.0.0.1:5000/api/iiif/v2/<uuid>/<region>/<size>/<rotation>/<quality>.<format>
 
 ```
+
+## Integration with ``oarepo-records-draft``
+
+``oarepo-records-draft`` adds support for uploading attachments with easier security checks than
+those in ``invenio-files-rest`` or ``invenio-record-files``.
+
+Moreover, it provides a set of callbacks that are called whenever a file is associated to a record.
+If ``oarepo-records-draft`` is detected, a custom handler is registered for ``attachment_uploaded_before_commit``.
+
+The handler 
 
 ## How it works (for library developers)
 
