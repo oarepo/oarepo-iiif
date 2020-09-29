@@ -108,7 +108,7 @@ def loaded(sender, app=None, **kwargs):
 
 
 try:
-    from oarepo_records_draft.signals import attachment_uploaded_before_commit, after_publish_record
+    from oarepo_records_draft.signals import attachment_uploaded_before_flush, after_publish_record
     from invenio_records_files.api import FileObject
 
 
@@ -121,7 +121,7 @@ try:
         )
 
 
-    @attachment_uploaded_before_commit.connect
+    @attachment_uploaded_before_flush.connect
     def file_uploaded(sender, record=None, pid=None, file: FileObject = None, **kwargs):
         iiif_urls = current_oarepo_iiif.get_iiif_urls(record=record, pid=pid, file=file, **kwargs)
         if iiif_urls:
