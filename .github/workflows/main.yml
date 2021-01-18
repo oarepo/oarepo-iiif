@@ -3,10 +3,9 @@ name: Test python
 on: [ push ]
 
 jobs:
-  env:
-    python-version: 3.8
-
   build:
+    env:
+      python-version: 3.8
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
