@@ -5,13 +5,14 @@ import os
 from setuptools import setup
 
 readme = open('README.md').read()
+OAREPO_VERSION = os.environ.get('OAREPO_VERSION', '3.3.0')
 
 install_requires = [
     'invenio-iiif'
 ]
 
 tests_require = [
-    'oarepo[tests]',
+    'oarepo[tests]~={version}'.format(version=OAREPO_VERSION)
 ]
 
 g = {}
