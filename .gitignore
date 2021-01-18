@@ -61,4 +61,6 @@ target/
 # Vim swapfiles
 .*.sw?
 
+.envrc
+
 venv
