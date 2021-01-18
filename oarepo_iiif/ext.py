@@ -137,7 +137,7 @@ try:
                                                           file=file, **kwargs)
             if iiif_urls:
                 file['iiif'] = iiif_urls
-        files.dump()
+        files.flush()
         published_record.commit()
 
 except ImportError:
