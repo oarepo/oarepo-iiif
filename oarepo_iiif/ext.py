@@ -108,7 +108,7 @@ def loaded(sender, app=None, **kwargs):
 
 
 try:
-    from oarepo_records_draft.signals import file_uploaded_before_flush, after_publish_record
+    from oarepo_records_draft.signals import file_uploaded_before_flush, after_publish_record, file_copied
     from invenio_records_files.api import FileObject
 
 
@@ -139,6 +139,18 @@ try:
                 file['iiif'] = iiif_urls
         files.flush()
         published_record.commit()
+
+
+    @file_copied.connect
+    def replace_urls(sender, source_record=None, target_record=None,
+                     object_version=None, tags=None, metadata=None,
+                     source_record_context=None, target_record_context=None,
+                     **kwargs):
+        if 'iiif' in metadata:
+            metadata['iiif'] = metadata['iiif'].replace(
+                f'api/iiif/v2/img:{source_record_context.record_pid.pid_type}',
+                f'api/iiif/v2/img:{target_record_context.record_pid.pid_type}',
+            )
 
 except ImportError:
     pass
